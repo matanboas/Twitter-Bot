@@ -124,13 +124,7 @@ run this command to install Tweepy:
    ```sh
    pip install Tweepy
    ```
-4. Set up your API key as environment variables
-    ```sh
-    export TWITTER_CONSUMER_KEY=<your consumer key>
-    export TWITTER_CONSUMER_SECRET=<your consumer secret>
-    export TWITTER_ACCESS_TOKEN=<your access token>
-    export TWITTER_ACCESS_TOKEN_SECRET=<your access token secret>
-    ```
+4. Set up your API key as environment variables in a .env file
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
