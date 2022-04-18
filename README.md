@@ -139,8 +139,6 @@ If you want to post a tweet, you can do so by running my bot.
 * python main.py
   ```
 
-_For more examples, please refer to the [Documentation](https://example.com)_
-
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 
@@ -199,9 +197,7 @@ Project Link: [https://github.com/matanboas/Twitter-Bot](https://github.com/mata
 <!-- ACKNOWLEDGMENTS -->
 ## Acknowledgments
 
-* []()
-* []()
-* []()
+* [auth0](https://auth0.com/blog/how-to-make-a-twitter-bot-in-python-using-tweepy/)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
