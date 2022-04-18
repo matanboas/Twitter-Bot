@@ -1,10 +1,12 @@
 from curses import keyname
+from re import fullmatch
 import tweepy
 import requests
 import os
 from dotenv import load_dotenv
 import urllib.request
 from PIL import Image, ImageFont, ImageDraw
+import textwrap
 
 load_dotenv()
 
@@ -25,17 +27,42 @@ def get_random_photo():
     save_name = 'images/current_picture.png'
     urllib.request.urlretrieve(image_url, save_name)
 
-def add_text_to_image():
-    image = Image.open('images/current_picture.png')
+def get_quote():
+    url = "https://programming-quotes-api.herokuapp.com/Quotes/random"
+
+    response = requests.get(url).json()
+    quote = response['en']
+    # add newline to quote every 6 words
+    quote_list = quote.split(' ')
+    new_quote = ''
+    for i in range(len(quote_list)):
+        if i % 3 == 0 and i != 0:
+            new_quote += quote_list[i] + '\n'
+        else:
+            new_quote += quote_list[i] + ' '
+    return new_quote, response['author']
+
+
+
+def add_text_to_image(msg):
+    path = 'images/current_picture.png'
+    image = Image.open(path)
+
     width, height = image.size
     draw = ImageDraw.Draw(image)
     font = ImageFont.truetype('fonts/Akshar-Bold.ttf', size=50)
-    msg = 'Hello World!'
+    lines = textwrap.wrap(msg, width=40)
 
-    textW, textH = draw.textsize(msg, font=font)
+    textW, textH = draw.textsize(lines[0], font=font)
+    fullTextH = (textH+10) * len(lines)
 
-    draw.text(((width-textW)/2,(height-textH)/2), msg, (255, 255, 255), font=font)
-    image.save('images/current_picture.png')
+    y_text = ((height-fullTextH)/2)
+    for line in lines:
+        textW, textH = draw.textsize(line, font=font)
+        draw.text(((width-textW)/2, y_text), line, (255, 255, 255), font=font)
+        y_text += textH
+
+    image.save(path)
 
 def connect_to_twitter():
     auth = tweepy.OAuthHandler(API_KEY_TWITTER, API_SECRET_TWITTER)
@@ -51,15 +78,16 @@ def connect_to_twitter():
 
     return api
 
-def tweet_picture(api):
+def tweet_picture(api, message):
     
-    api.update_status_with_media('', 'images/current_picture.png')
+    api.update_status_with_media(message, 'images/current_picture.png')
 
 def main():
     get_random_photo()
-    add_text_to_image()
+    msg, author = get_quote()
+    add_text_to_image(msg)
     api = connect_to_twitter()
-    tweet_picture(api)
+    tweet_picture(api, author)
 
 if __name__ == '__main__':
     main()
