@@ -1,22 +1,18 @@
+import 'utils/constants.dart';
+import 'package:control_app/screens/landing_screen.dart';
 import 'package:flutter/material.dart';
 
-void main() => runApp(const my_app());
+void main() => runApp(const MyApp());
 
-class my_app extends StatelessWidget {
-  const my_app({Key? key}) : super(key: key);
+class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('My App'),
-        ),
-        body: const Center(
-          child: Text('Hello World'),
-        ),
-      ),
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(textTheme: defaultText),
+      home: const LandingScreen(),
     );
   }
 }

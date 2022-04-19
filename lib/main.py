@@ -24,7 +24,7 @@ def get_random_photo(path='images/current_picture.png'):
     keyword='nature'
 
     photo_data = requests.get(f'https://api.unsplash.com/photos/random?query={keyword}&client_id={API_KEY_UNSPLASH}').json()
-    image_url = photo_data['urls']['full']
+    image_url = photo_data['urls']['regular']
 
     urllib.request.urlretrieve(image_url, path)
 
@@ -88,12 +88,10 @@ def tweet_picture(api, message, path='images/current_picture.png'):
 
 def main():
     get_random_photo()
-    #msg, author = get_quote()
-    #add_text_to_image(msg)
-    #api = connect_to_twitter()
-    #tweet_picture(api, author)
-
-    # app color pallete = https://colorhunt.co/palette/191a191e51284e9f3dd8e9a8
+    msg, author = get_quote()
+    add_text_to_image(msg)
+    api = connect_to_twitter()
+    tweet_picture(api, author)
 
 if __name__ == '__main__':
     main()
