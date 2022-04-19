@@ -8,8 +8,9 @@ import urllib.request
 from PIL import Image, ImageFont, ImageDraw
 import textwrap
 
-load_dotenv()
+load_dotenv() #load API keys
 
+# set API keys from .env file
 API_KEY_TWITTER = os.environ.get('API_KEY_TWITTER')
 API_SECRET_TWITTER = os.environ.get('API_SECRET_TWITTER')
 ACCESS_TOKEN_TWITTER = os.environ.get('ACCESS_TOKEN_TWITTER')
@@ -18,34 +19,37 @@ ACCESS_SECRET_TWITTER = os.environ.get('ACCESS_SECRET_TWITTER')
 API_KEY_UNSPLASH = os.environ.get('API_KEY_UNSPLASH')
 API_SECRET_UNSPLASH = os.environ.get('API_SECRET_UNSPLASH')
 
-def get_random_photo():
+def get_random_photo(path='images/current_picture.png'):
+    """get random photo from unsplash"""
     keyword='nature'
 
-    photo_data = requests.get(f'https://api.unsplash.com/photos/random?query={keyword}&orientation=landscape&client_id={API_KEY_UNSPLASH}').json()
-    image_url = photo_data['urls']['regular']
+    photo_data = requests.get(f'https://api.unsplash.com/photos/random?query={keyword}&client_id={API_KEY_UNSPLASH}').json()
+    image_url = photo_data['urls']['full']
 
-    save_name = 'images/current_picture.png'
-    urllib.request.urlretrieve(image_url, save_name)
+    urllib.request.urlretrieve(image_url, path)
 
 def get_quote():
+    """get quote from api
+
+    Returns:
+        tuple: (quote, author)
+    """    """"""
     url = "https://programming-quotes-api.herokuapp.com/Quotes/random"
 
     response = requests.get(url).json()
     quote = response['en']
-    # add newline to quote every 6 words
-    quote_list = quote.split(' ')
-    new_quote = ''
-    for i in range(len(quote_list)):
-        if i % 3 == 0 and i != 0:
-            new_quote += quote_list[i] + '\n'
-        else:
-            new_quote += quote_list[i] + ' '
-    return new_quote, response['author']
+
+    return quote, response['author']
 
 
 
-def add_text_to_image(msg):
-    path = 'images/current_picture.png'
+def add_text_to_image(msg, path='images/current_picture.png'):
+    """adds text to image
+
+    Args:
+        msg (str): message to add to image
+        path (str, optional): the path to the image. Defaults to 'images/current_picture.png'.
+    """
     image = Image.open(path)
 
     width, height = image.size
@@ -78,16 +82,18 @@ def connect_to_twitter():
 
     return api
 
-def tweet_picture(api, message):
+def tweet_picture(api, message, path='images/current_picture.png'):
     
-    api.update_status_with_media(message, 'images/current_picture.png')
+    api.update_status_with_media(message, path)
 
 def main():
     get_random_photo()
-    msg, author = get_quote()
-    add_text_to_image(msg)
-    api = connect_to_twitter()
-    tweet_picture(api, author)
+    #msg, author = get_quote()
+    #add_text_to_image(msg)
+    #api = connect_to_twitter()
+    #tweet_picture(api, author)
+
+    # app color pallete = https://colorhunt.co/palette/191a191e51284e9f3dd8e9a8
 
 if __name__ == '__main__':
     main()
